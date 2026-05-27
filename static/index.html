@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="/static/style.css" rel="stylesheet" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/bold/style.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/fill/style.css"
+    />
+    <title>Bank API — Painel</title>
+  </head>
+  <body>
+    <div id="tela-auth">
+      <div class="caixa-auth">
+        <div class="logo-auth">
+          <div class="texto-logo-auth">Bank<span>API</span></div>
+        </div>
+        <div class="abas-auth">
+          <button class="aba-auth ativo" onclick="alternarAba('login')">
+            Entrar
+          </button>
+          <button class="aba-auth" onclick="alternarAba('cadastro')">
+            Criar conta
+          </button>
+        </div>
+
+        <div id="aba-login">
+          <div class="campo">
+            <label>Usuário</label>
+            <input
+              id="login-usuario"
+              type="text"
+              placeholder="Digite seu usuário"
+              autocomplete="username"
+            />
+          </div>
+          <div class="campo">
+            <label>Senha</label>
+            <input
+              id="login-senha"
+              type="password"
+              placeholder="••••••••"
+              autocomplete="current-password"
+            />
+          </div>
+          <button
+            class="btn btn-primario"
+            id="btn-login"
+            onclick="fazerLogin()"
+          >
+            <span id="texto-btn-login">Entrar</span>
+          </button>
+          <div id="msg-login"></div>
+        </div>
+
+        <div id="aba-cadastro" style="display: none">
+          <div class="campo">
+            <label>Usuário</label>
+            <input
+              id="cad-usuario"
+              type="text"
+              placeholder="Digite seu usuário"
+            />
+          </div>
+          <div class="campo">
+            <label>Senha</label>
+            <input id="cad-senha" type="password" placeholder="••••••••" />
+          </div>
+          <button
+            class="btn btn-primario"
+            id="btn-cad"
+            onclick="fazerCadastro()"
+          >
+            <span id="texto-btn-cad">Criar conta</span>
+          </button>
+          <div id="msg-cad"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tela-app">
+      <div class="estrutura">
+        <nav class="barra-lateral">
+          <div class="logo-bl">Bank<span>API</span></div>
+          <div class="nav">
+            <button
+              class="item-nav ativo"
+              onclick="mostrarPagina('painel')"
+              id="nav-painel"
+            >
+              <i class="ph ph-squares-four"></i>
+              Painel Principal
+            </button>
+            <button
+              class="item-nav"
+              onclick="mostrarPagina('extrato')"
+              id="nav-extrato"
+            >
+              <i class="ph ph-clipboard-text"></i>
+              Extrato
+            </button>
+            <button
+              class="item-nav"
+              onclick="mostrarPagina('config')"
+              id="nav-config"
+            >
+              <i class="ph ph-gear"></i>
+              Configurações
+            </button>
+          </div>
+          <div>
+            <div class="usuario-bl">
+              <div class="nome-usuario-bl" id="sb-usuario">—</div>
+              <div class="id-usuario-bl" id="sb-id">id: —</div>
+            </div>
+            <button class="sair-bl" onclick="sair()">
+              <i class="ph ph-sign-out"></i>
+              Sair do Painel
+            </button>
+          </div>
+        </nav>
+
+        <main class="principal">
+          <div class="pagina ativo" id="pagina-painel">
+            <div class="titulo-pagina">
+              Olá, <span id="nome-saudacao">—</span>
+              <i
+                class="ph ph-hand-waving"
+                style="font-size: 1em; vertical-align: middle"
+              ></i>
+            </div>
+            <div class="sub-pagina">
+              Bem-vindo ao meu melhor banco de universitários para
+              universitários.
+            </div>
+
+            <div class="cartao-saldo">
+              <div class="rotulo-saldo">Saldo disponível</div>
+              <div class="valor-saldo" id="exibir-saldo"><sup>R$</sup>0,00</div>
+              <div class="acoes-saldo">
+                <button
+                  class="btn-saldo btn-saldo-verde"
+                  onclick="abrirModal('deposito')"
+                >
+                  <i class="ph-bold ph-arrow-up"></i> Depositar
+                </button>
+                <button
+                  class="btn-saldo btn-saldo-contorno"
+                  onclick="abrirModal('saque')"
+                >
+                  <i class="ph-bold ph-arrow-down"></i> Sacar
+                </button>
+              </div>
+            </div>
+
+            <div class="linha-estat">
+              <div class="cartao-estat">
+                <div class="rotulo-estat">Total depositado</div>
+                <div class="valor-estat verde" id="estat-dep">R$ 0,00</div>
+              </div>
+              <div class="cartao-estat">
+                <div class="rotulo-estat">Total sacado</div>
+                <div class="valor-estat vermelho" id="estat-saq">R$ 0,00</div>
+              </div>
+              <div class="cartao-estat">
+                <div class="rotulo-estat">Transações</div>
+                <div class="valor-estat" id="estat-total">0</div>
+              </div>
+            </div>
+
+            <div class="cabecalho-secao">
+              <div class="titulo-secao">Últimas transações</div>
+              <button
+                class="btn btn-fantasma"
+                style="padding: 6px 12px; font-size: 12px"
+                onclick="mostrarPagina('extrato')"
+              >
+                Ver todas <i class="ph ph-arrow-right"></i>
+              </button>
+            </div>
+            <div class="lista-tx" id="lista-tx-painel">
+              <div class="estado-vazio">
+                <div class="icone-vazio"><i class="ph ph-chart-bar"></i></div>
+                <div>Nenhuma transação ainda</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pagina" id="pagina-extrato">
+            <div class="titulo-pagina">Extrato geral</div>
+            <div class="sub-pagina">Histórico de todas as suas transações.</div>
+            <div class="cabecalho-secao">
+              <div
+                id="contagem-extrato"
+                style="font-size: 13px; color: var(--text-2)"
+              ></div>
+              <button
+                class="btn btn-fantasma"
+                style="padding: 6px 14px; font-size: 13px"
+                onclick="carregarExtrato()"
+              >
+                <i class="ph ph-arrows-clockwise"></i> Atualizar
+              </button>
+            </div>
+            <div class="lista-tx" id="lista-tx-extrato">
+              <div class="estado-vazio">
+                <div class="icone-vazio"><i class="ph ph-receipt"></i></div>
+                <div>Carregando extrato...</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="pagina" id="pagina-config">
+            <div class="titulo-pagina">Configurações</div>
+            <div class="sub-pagina">Gerencie os dados da sua conta.</div>
+
+            <div class="cartao-config">
+              <div class="titulo-cartao-config">Atualizar dados</div>
+              <div class="linha-config">
+                <div class="campo" style="margin: 0">
+                  <label>Novo usuário</label>
+                  <input
+                    id="atu-usuario"
+                    type="text"
+                    placeholder="Digite um novo nome para alterar seu usuário."
+                  />
+                </div>
+                <div class="campo" style="margin: 0">
+                  <label>Nova senha</label>
+                  <input
+                    id="atu-senha"
+                    type="password"
+                    placeholder="Digite uma nova senha caso queira alterar."
+                  />
+                </div>
+              </div>
+              <button
+                class="btn btn-primario"
+                style="width: auto; margin-top: 1rem; padding: 10px 24px"
+                onclick="fazerAtualizacao()"
+              >
+                <span id="texto-btn-atu">
+                  <i class="ph ph-floppy-disk"></i> Salvar alterações
+                </span>
+              </button>
+              <div id="msg-atu"></div>
+            </div>
+
+            <div class="cartao-config zona-perigo">
+              <div class="titulo-cartao-config">
+                <i
+                  class="ph-fill ph-warning"
+                  style="color: var(--vermelho); vertical-align: middle"
+                ></i>
+                Zona de risco
+              </div>
+              <div class="texto-perigo">
+                Excluir sua conta é uma ação permanente e não pode ser desfeita.
+                Todos os seus dados e histórico de transações serão perdidos.
+              </div>
+              <button class="btn btn-perigo" onclick="confirmarExclusao()">
+                <i class="ph ph-trash"></i> Excluir minha conta
+              </button>
+              <div id="msg-excluir"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <div class="fundo-modal" id="fundo-modal" onclick="fecharModalFora(event)">
+      <div class="modal">
+        <div class="titulo-modal" id="titulo-modal">Nova transação</div>
+        <div class="selecao-tipo">
+          <button
+            class="btn-tipo ativo-dep"
+            id="btn-tipo-dep"
+            onclick="definirTipo('deposito')"
+          >
+            <i class="ph-bold ph-arrow-up"></i> Depósito
+          </button>
+          <button
+            class="btn-tipo"
+            id="btn-tipo-saq"
+            onclick="definirTipo('saque')"
+          >
+            <i class="ph-bold ph-arrow-down"></i> Saque
+          </button>
+        </div>
+        <div class="envolvedor-valor">
+          <input
+            id="tx-valor"
+            type="number"
+            step="0.01"
+            min="0.01"
+            placeholder="0,00"
+          />
+        </div>
+        <div id="msg-tx"></div>
+        <div class="acoes-modal">
+          <button class="btn btn-fantasma" onclick="fecharModal()">
+            <i class="ph ph-x"></i> Cancelar
+          </button>
+          <button
+            class="btn btn-primario"
+            id="btn-confirmar-tx"
+            onclick="fazerTransacao()"
+          >
+            <span id="texto-btn-tx">
+              <i class="ph ph-check"></i> Confirmar
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // ═══════════════════════════════════════════════
+      // ESTADO
+      // ═══════════════════════════════════════════════
+      let token = null;
+      let usuarioAtual = { id: null, usuario: "", saldo: 0 };
+      let dadosExtrato = [];
+      let tipoAtual = "deposito";
+
+      function getBase() {
+        return window.location.origin.replace(/\/$/, "");
+      }
+
+      // ═══════════════════════════════════════════════
+      // API
+      // ═══════════════════════════════════════════════
+      async function api(metodo, caminho, corpo, isForm = false) {
+        const cabecalhos = {};
+        if (token) cabecalhos["Authorization"] = `Bearer ${token}`;
+        let fetchCorpo;
+        if (corpo) {
+          if (isForm) {
+            fetchCorpo = new URLSearchParams(corpo);
+          } else {
+            cabecalhos["Content-Type"] = "application/json";
+            fetchCorpo = JSON.stringify(corpo);
+          }
+        }
+        const res = await fetch(getBase() + caminho, {
+          method: metodo,
+          headers: cabecalhos,
+          body: fetchCorpo,
+        });
+        const dados = await res.json().catch(() => ({}));
+        return { ok: res.ok, status: res.status, data: dados };
+      }
+
+      // ═══════════════════════════════════════════════
+      // AUTENTICAÇÃO
+      // ═══════════════════════════════════════════════
+      function alternarAba(aba) {
+        document
+          .querySelectorAll(".aba-auth")
+          .forEach((t) => t.classList.remove("ativo"));
+        event.target.classList.add("ativo");
+        document.getElementById("aba-login").style.display =
+          aba === "login" ? "" : "none";
+        document.getElementById("aba-cadastro").style.display =
+          aba === "cadastro" ? "" : "none";
+      }
+
+      function mostrarMsg(id, texto, tipo = "erro") {
+        document.getElementById(id).innerHTML =
+          `<div class="msg ${tipo}">${texto}</div>`;
+      }
+
+      async function fazerLogin() {
+        const usuario = document.getElementById("login-usuario").value.trim();
+        const senha = document.getElementById("login-senha").value;
+        if (!usuario || !senha)
+          return mostrarMsg("msg-login", "Preencha todos os campos.");
+        setBtnCarregando("btn-login", "texto-btn-login", true);
+        try {
+          const r = await api(
+            "POST",
+            "/auth/login",
+            { username: usuario, password: senha },
+            true,
+          );
+          if (!r.ok)
+            return mostrarMsg(
+              "msg-login",
+              r.data.detail || "Credenciais inválidas.",
+            );
+          token = r.data.access_token;
+          usuarioAtual.usuario = usuario;
+          entrarApp();
+        } catch (e) {
+          mostrarMsg("msg-login", "Não foi possível conectar ao servidor.");
+        } finally {
+          setBtnCarregando("btn-login", "texto-btn-login", false, "Entrar");
+        }
+      }
+
+      async function fazerCadastro() {
+        const usuario = document.getElementById("cad-usuario").value.trim();
+        const senha = document.getElementById("cad-senha").value;
+        if (!usuario || !senha)
+          return mostrarMsg("msg-cad", "Preencha todos os campos.");
+        setBtnCarregando("btn-cad", "texto-btn-cad", true);
+        try {
+          const r = await api("POST", "/auth/cadastro", { usuario, senha });
+          if (!r.ok)
+            return mostrarMsg(
+              "msg-cad",
+              r.data.detail || "Erro ao criar conta.",
+            );
+          mostrarMsg("msg-cad", "Conta criada! Faça login agora.", "sucesso");
+          usuarioAtual = r.data;
+          document.querySelectorAll(".aba-auth")[0].classList.add("ativo");
+          document.querySelectorAll(".aba-auth")[1].classList.remove("ativo");
+          document.getElementById("aba-login").style.display = "";
+          document.getElementById("aba-cadastro").style.display = "none";
+          document.getElementById("login-usuario").value = usuario;
+        } catch (e) {
+          mostrarMsg("msg-cad", "Não foi possível conectar ao servidor.");
+        } finally {
+          setBtnCarregando("btn-cad", "texto-btn-cad", false, "Criar conta");
+        }
+      }
+
+      function setBtnCarregando(btnId, textoId, carregando, textoReset = "") {
+        const btn = document.getElementById(btnId);
+        const txt = document.getElementById(textoId);
+        btn.disabled = carregando;
+        txt.innerHTML = carregando
+          ? '<span class="carregador"></span>'
+          : textoReset || txt.innerHTML;
+      }
+
+      // ═══════════════════════════════════════════════
+      // APP
+      // ═══════════════════════════════════════════════
+      async function entrarApp() {
+        document.getElementById("tela-auth").style.display = "none";
+        document.getElementById("tela-app").style.display = "block";
+        await carregarExtrato();
+        atualizarBarraLateral();
+        atualizarPainel();
+      }
+
+      function sair() {
+        token = null;
+        usuarioAtual = { id: null, usuario: "", saldo: 0 };
+        dadosExtrato = [];
+        document.getElementById("tela-auth").style.display = "";
+        document.getElementById("tela-app").style.display = "none";
+        mostrarPagina("painel");
+      }
+
+      function atualizarBarraLateral() {
+        document.getElementById("sb-usuario").textContent =
+          usuarioAtual.usuario || "—";
+        document.getElementById("sb-id").textContent =
+          `id: ${usuarioAtual.id || "—"}`;
+        document.getElementById("nome-saudacao").textContent =
+          usuarioAtual.usuario || "você";
+      }
+
+      // ═══════════════════════════════════════════════
+      // EXTRATO
+      // ═══════════════════════════════════════════════
+      async function carregarExtrato() {
+        try {
+          const r = await api("GET", "/transacao/extrato");
+          if (!r.ok) return;
+          dadosExtrato = r.data;
+          if (dadosExtrato.length > 0)
+            usuarioAtual.id = dadosExtrato[0].conta_id;
+          renderizarExtrato();
+          atualizarPainel();
+          atualizarBarraLateral();
+        } catch (e) {}
+      }
+
+      function formatarData(str) {
+        if (!str) return "";
+        return new Date(str).toLocaleDateString("pt-BR", {
+          day: "2-digit",
+          month: "short",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        });
+      }
+
+      function formatarDinheiro(v) {
+        return new Intl.NumberFormat("pt-BR", {
+          style: "currency",
+          currency: "BRL",
+        }).format(v || 0);
+      }
+
+      function renderizarItemTx(tx) {
+        const isDep = tx.tipo === "deposito";
+        return `<div class="item-tx">
+          <div class="icone-tx ${isDep ? "dep" : "saq'}"}">
+            <i class="ph-bold ${isDep ? "ph-arrow-up" : "ph-arrow-down"}"></i>
+          </div>
+          <div class="info-tx">
+            <div class="tx-tipo">${tx.tipo}</div>
+            <div class="tx-data">${formatarData(tx.data)}</div>
+          </div>
+          <div class="tx-valor ${isDep ? "verde" : "vermelho"}">${isDep ? "+" : "-"}${formatarDinheiro(tx.valor)}</div>
+        </div>`;
+      }
+
+      function renderizarExtrato() {
+        const lista = document.getElementById("lista-tx-extrato");
+        const contagem = document.getElementById("contagem-extrato");
+        if (!dadosExtrato.length) {
+          lista.innerHTML = `<div class="estado-vazio"><div class="icone-vazio"><i class="ph ph-receipt"></i></div><div>Nenhuma transação encontrada</div></div>`;
+          contagem.textContent = "";
+          return;
+        }
+        const ordenado = [...dadosExtrato].sort(
+          (a, b) => new Date(b.data) - new Date(a.data),
+        );
+        lista.innerHTML = ordenado.map(renderizarItemTx).join("");
+        contagem.textContent = `${dadosExtrato.length} transação(ões)`;
+      }
+
+      function atualizarPainel() {
+        const dep = dadosExtrato
+          .filter((t) => t.tipo === "deposito")
+          .reduce((s, t) => s + t.valor, 0);
+        const saq = dadosExtrato
+          .filter((t) => t.tipo === "saque")
+          .reduce((s, t) => s + t.valor, 0);
+        const saldo = dep - saq;
+
+        document.getElementById("estat-dep").textContent =
+          formatarDinheiro(dep);
+        document.getElementById("estat-saq").textContent =
+          formatarDinheiro(saq);
+        document.getElementById("estat-total").textContent =
+          dadosExtrato.length;
+        document.getElementById("exibir-saldo").innerHTML =
+          `<sup>R$</sup>${new Intl.NumberFormat("pt-BR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(saldo)}`;
+
+        const listaPainel = document.getElementById("lista-tx-painel");
+        if (!dadosExtrato.length) {
+          listaPainel.innerHTML = `<div class="estado-vazio"><div class="icone-vazio"><i class="ph ph-chart-bar"></i></div><div>Nenhuma transação ainda</div></div>`;
+          return;
+        }
+        const recentes = [...dadosExtrato]
+          .sort((a, b) => new Date(b.data) - new Date(a.data))
+          .slice(0, 5);
+        listaPainel.innerHTML = recentes.map(renderizarItemTx).join("");
+      }
+
+      // ═══════════════════════════════════════════════
+      // MODAL DE TRANSAÇÃO
+      // ═══════════════════════════════════════════════
+      function abrirModal(tipo) {
+        definirTipo(tipo);
+        document.getElementById("tx-valor").value = "";
+        document.getElementById("msg-tx").innerHTML = "";
+        document.getElementById("fundo-modal").classList.add("aberto");
+        setTimeout(() => document.getElementById("tx-valor").focus(), 300);
+      }
+
+      function fecharModal() {
+        document.getElementById("fundo-modal").classList.remove("aberto");
+      }
+
+      function fecharModalFora(e) {
+        if (e.target === document.getElementById("fundo-modal")) fecharModal();
+      }
+
+      function definirTipo(tipo) {
+        tipoAtual = tipo;
+        document.getElementById("btn-tipo-dep").className =
+          "btn-tipo" + (tipo === "deposito" ? " ativo-dep" : "");
+        document.getElementById("btn-tipo-saq").className =
+          "btn-tipo" + (tipo === "saque" ? " ativo-saq" : "");
+        document.getElementById("titulo-modal").textContent =
+          tipo === "deposito" ? "Novo depósito" : "Novo saque";
+      }
+
+      async function fazerTransacao() {
+        const valorRaw = document.getElementById("tx-valor").value;
+        const valor = parseFloat(valorRaw);
+        if (!valorRaw || isNaN(valor) || valor <= 0)
+          return mostrarMsg(
+            "msg-tx",
+            "Informe um valor válido maior que zero.",
+          );
+        document.getElementById("btn-confirmar-tx").disabled = true;
+        document.getElementById("texto-btn-tx").innerHTML =
+          '<span class="carregador"></span>';
+        try {
+          const r = await api("POST", "/transacao/", {
+            tipo: tipoAtual,
+            valor,
+          });
+          if (!r.ok) {
+            mostrarMsg(
+              "msg-tx",
+              r.data.detail || "Erro ao realizar transação.",
+            );
+            return;
+          }
+          fecharModal();
+          await carregarExtrato();
+          mostrarPagina("painel");
+        } catch (e) {
+          mostrarMsg("msg-tx", "Não foi possível conectar ao servidor.");
+        } finally {
+          document.getElementById("btn-confirmar-tx").disabled = false;
+          document.getElementById("texto-btn-tx").innerHTML =
+            '<i class="ph ph-check"></i> Confirmar';
+        }
+      }
+
+      // ═══════════════════════════════════════════════
+      // CONFIGURAÇÕES
+      // ═══════════════════════════════════════════════
+      async function fazerAtualizacao() {
+        const usuario = document.getElementById("atu-usuario").value.trim();
+        const senha = document.getElementById("atu-senha").value;
+        if (!usuario && !senha)
+          return mostrarMsg(
+            "msg-atu",
+            "Informe pelo menos um campo para atualizar.",
+          );
+        const corpo = {};
+        if (usuario) corpo.usuario = usuario;
+        if (senha) corpo.senha = senha;
+        const btn = document.querySelector('[onclick="fazerAtualizacao()"]');
+        btn.disabled = true;
+        document.getElementById("texto-btn-atu").innerHTML =
+          '<span class="carregador"></span>';
+        try {
+          const r = await api("PATCH", "/conta/", corpo);
+          if (!r.ok)
+            return mostrarMsg("msg-atu", r.data.detail || "Erro ao atualizar.");
+          if (usuario) {
+            usuarioAtual.usuario = usuario;
+            atualizarBarraLateral();
+          }
+          mostrarMsg("msg-atu", "Dados atualizados com sucesso!", "sucesso");
+          document.getElementById("atu-usuario").value = "";
+          document.getElementById("atu-senha").value = "";
+        } catch (e) {
+          mostrarMsg("msg-atu", "Erro de conexão com o servidor.");
+        } finally {
+          btn.disabled = false;
+          document.getElementById("texto-btn-atu").innerHTML =
+            '<i class="ph ph-floppy-disk"></i> Salvar alterações';
+        }
+      }
+
+      async function confirmarExclusao() {
+        if (!confirm("Tem certeza? Esta ação não pode ser desfeita.")) return;
+        const btn = document.querySelector('[onclick="confirmarExclusao()"]');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="ph ph-spinner"></i> Excluindo...';
+        try {
+          const r = await api("DELETE", "/conta/");
+          if (r.status === 204 || r.ok) {
+            alert("Conta excluída. Até logo!");
+            sair();
+          } else {
+            mostrarMsg(
+              "msg-excluir",
+              r.data?.detail || "Erro ao excluir conta.",
+            );
+            btn.disabled = false;
+            btn.innerHTML = '<i class="ph ph-trash"></i> Excluir minha conta';
+          }
+        } catch (e) {
+          mostrarMsg("msg-excluir", "Erro de conexão.");
+          btn.disabled = false;
+          btn.innerHTML = '<i class="ph ph-trash"></i> Excluir minha conta';
+        }
+      }
+
+      // ═══════════════════════════════════════════════
+      // NAVEGAÇÃO
+      // ═══════════════════════════════════════════════
+      function mostrarPagina(pagina) {
+        document
+          .querySelectorAll(".pagina")
+          .forEach((p) => p.classList.remove("ativo"));
+        document
+          .querySelectorAll(".item-nav")
+          .forEach((n) => n.classList.remove("ativo"));
+        document.getElementById("pagina-" + pagina).classList.add("ativo");
+        document.getElementById("nav-" + pagina).classList.add("ativo");
+        if (pagina === "extrato") carregarExtrato();
+      }
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          const el = document.activeElement;
+          if (el.id === "login-usuario" || el.id === "login-senha")
+            fazerLogin();
+          if (el.id === "cad-usuario" || el.id === "cad-senha") fazerCadastro();
+          if (el.id === "tx-valor") fazerTransacao();
+        }
+        if (e.key === "Escape") fecharModal();
+      });
+    </script>
+  </body>
+</html>
