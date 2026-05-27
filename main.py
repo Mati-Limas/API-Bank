@@ -23,3 +23,11 @@ app = FastAPI(lifespan=lifespan,
 app.include_router(auth_router)
 app.include_router(transacao_router)
 app.include_router(conta_router)
+
+# Serve o frontend
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
+
+@app.get("/")
+async def serve_frontend():
+    return FileResponse(os.path.join("static", "index.html"))
