@@ -4,6 +4,9 @@ from controllers.transacao import router as transacao_router
 from controllers.conta import router as conta_router
 from database import engine, database, metadata
 from contextlib import asynccontextmanager
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
