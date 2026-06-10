@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🏦 API-Bank
+#  API-Bank
 
 **Asynchronous RESTful API for managing bank accounts and transactions**
 
@@ -14,7 +14,7 @@
 
 ---
 
-## 📖 Overview
+##  Overview
 
 API-Bank is a fully asynchronous banking REST API built with **FastAPI** and **SQLAlchemy**. It handles user registration, JWT-based authentication, and financial transactions — all with auto-generated interactive documentation via Swagger UI. A static frontend is also served directly from the application.
 
@@ -33,11 +33,11 @@ API-Bank is a fully asynchronous banking REST API built with **FastAPI** and **S
 
 ---
 
-## 🗂️ Project Structure
+##  Project Structure
 
 ```
 API-Bank/
-├── controllers/        # Route handlers (auth, account, transaction)
+├── controllers/        # Route handlers (auth, conta, transacao)
 ├── models/             # SQLAlchemy table definitions
 ├── schemas/            # Pydantic request/response models
 ├── services/           # Business logic layer
@@ -50,7 +50,7 @@ API-Bank/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -60,23 +60,158 @@ API-Bank/
 
 ---
 
-### 🐧 Linux (Ubuntu, Debian, Arch, Fedora)
+### 🐧 Linux
+
+> The core steps are the same across all distros. The difference is **how you install Python and pip** before starting.
+
+---
+
+#### Ubuntu / Debian
 
 ```bash
-# 1. Clone the repository
+# Install Python and required tools
+sudo apt update
+sudo apt install python3 python3-pip python3-venv git -y
+
+# Clone the repository
 git clone https://github.com/Mati-Limas/API-Bank.git
 cd API-Bank
 
-# 2. Create and activate a virtual environment
+# Create and activate a virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# 3. Install dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# 4. Start the server
+# Start the server
 uvicorn main:app --reload
 ```
+
+<details>
+<summary><strong>⚠️ Common issues on Ubuntu/Debian</strong></summary>
+
+**`python3-venv` not found or venv creation fails**
+```bash
+sudo apt install python3-venv python3-full -y
+```
+
+**`pip install` fails with `externally-managed-environment`** (Ubuntu 23.04+/Debian 12+)
+> This is a system protection. Always use a venv (as shown above) — never use `--break-system-packages`.
+```
+
+</details>
+
+---
+
+#### Arch Linux / Manjaro
+
+```bash
+# Install Python and Git (Python 3 is already the default on Arch)
+sudo pacman -Syu python python-pip git --noconfirm
+
+# Clone the repository
+git clone https://github.com/Mati-Limas/API-Bank.git
+cd API-Bank
+
+# Create and activate a virtual environment
+python -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn main:app --reload
+```
+
+<details>
+<summary><strong>⚠️ Common issues on Arch/Manjaro</strong></summary>
+
+**`pip install` fails with `externally-managed-environment`**
+> Arch enforces PEP 668. Always install inside a venv. If you really need to install globally (not recommended):
+```bash
+pip install -r requirements.txt --break-system-packages
+```
+
+**`uvicorn` not found after installing**
+> The venv may not be active. Check for `(venv)` at the start of your prompt. If missing:
+```bash
+source venv/bin/activate
+```
+
+</details>
+
+---
+
+#### Fedora / RHEL / CentOS Stream
+
+```bash
+# Install Python and Git
+sudo dnf install python3 python3-pip git -y
+
+# Clone the repository
+git clone https://github.com/Mati-Limas/API-Bank.git
+cd API-Bank
+
+# Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn main:app --reload
+```
+
+<details>
+<summary><strong>⚠️ Common issues on Fedora/RHEL</strong></summary>
+
+**`python3-venv` not available**
+```bash
+sudo dnf install python3-virtualenv -y
+```
+
+**`pip` not found after activating venv**
+```bash
+python3 -m ensurepip --upgrade
+```
+
+</details>
+
+---
+
+#### openSUSE
+
+```bash
+# Install Python and Git
+sudo zypper install python3 python3-pip git
+
+# Clone the repository
+git clone https://github.com/Mati-Limas/API-Bank.git
+cd API-Bank
+
+# Create and activate a virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Start the server
+uvicorn main:app --reload
+```
+
+<details>
+<summary><strong>⚠️ Common issues on openSUSE</strong></summary>
+
+**`python3-venv` not found**
+```bash
+sudo zypper install python3-virtualenv
+```
+
+</details>
 
 ---
 
