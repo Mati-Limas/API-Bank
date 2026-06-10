@@ -37,7 +37,7 @@ API-Bank is a fully asynchronous banking REST API built with **FastAPI** and **S
 
 ```
 API-Bank/
-├── controllers/        # Route handlers (auth, conta, transacao)
+├── controllers/        # Route handlers (auth, account, transaction)
 ├── models/             # SQLAlchemy table definitions
 ├── schemas/            # Pydantic request/response models
 ├── services/           # Business logic layer
@@ -60,7 +60,7 @@ API-Bank/
 
 ---
 
-### 🐧 Linux (Ubuntu, Debian, Arch, Fedora...)
+### 🐧 Linux (Ubuntu, Debian, Arch, Fedora)
 
 ```bash
 # 1. Clone the repository
