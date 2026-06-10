@@ -19,6 +19,8 @@ async def fazer_transacao(transacao: TransacaoIn, conta_id: int = Depends(get_co
     conta_atual = await database.fetch_one(contas.select().where(contas.c.id == conta_id))
     if transacao.valor <= 0:
         raise HTTPException(status_code=422, detail='Os valores das transações não podem ser negativos')
+    elif transacao.valor < 0.01:
+        raise HTTPException(status_code=422, detail='Os valores tem que ser maiores que 0.01')
     elif transacao.tipo == 'saque':
         if transacao.valor > conta_atual['saldo']:
             raise HTTPException(status_code=422, detail='Valor de saldo na conta insuficiente')
